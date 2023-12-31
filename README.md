@@ -4,15 +4,15 @@
 ## Languages
 | Day | Language    |
 |-----|-------------|
-| [1](https://adventofcode.com/day/1)   | [Zig](https://ziglang.org/)         |
-| [2](https://adventofcode.com/day/2)   | [Zig](https://ziglang.org/)         |
-| [3](https://adventofcode.com/day/3)   | Uncompleted |
-| [4](https://adventofcode.com/day/4)   | Uncompleted |
-| [5](https://adventofcode.com/day/5)   | Uncompleted |
-| [6](https://adventofcode.com/day/6)   | Uncompleted |
-| [7](https://adventofcode.com/day/7)   | Uncompleted |
-| [8](https://adventofcode.com/day/8)   | Uncompleted |
-| [9](https://adventofcode.com/day/9)   | Uncompleted |
+| [01](https://adventofcode.com/day/1)  | [Zig](https://ziglang.org/)         |
+| [02](https://adventofcode.com/day/2)  | [Zig](https://ziglang.org/)         |
+| [03](https://adventofcode.com/day/3)  | Uncompleted |
+| [04](https://adventofcode.com/day/4)  | Uncompleted |
+| [05](https://adventofcode.com/day/5)  | Uncompleted |
+| [06](https://adventofcode.com/day/6)  | Uncompleted |
+| [07](https://adventofcode.com/day/7)  | Uncompleted |
+| [08](https://adventofcode.com/day/8)  | Uncompleted |
+| [09](https://adventofcode.com/day/9)  | Uncompleted |
 | [10](https://adventofcode.com/day/10) | Uncompleted |
 | [11](https://adventofcode.com/day/11)  | Uncompleted |
 | [12](https://adventofcode.com/day/12)  | Uncompleted |
