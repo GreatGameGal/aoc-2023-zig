@@ -7,7 +7,7 @@
 | [01](https://adventofcode.com/day/1)   | [Zig](https://ziglang.org/) |
 | [02](https://adventofcode.com/day/2)   | [Zig](https://ziglang.org/) |
 | [03](https://adventofcode.com/day/3)   | [Zig](https://ziglang.org/) |
-| [04](https://adventofcode.com/day/4)   | Uncompleted                 |
+| [04](https://adventofcode.com/day/4)   | [Zig](https://ziglang.org)  |
 | [05](https://adventofcode.com/day/5)   | Uncompleted                 |
 | [06](https://adventofcode.com/day/6)   | Uncompleted                 |
 | [07](https://adventofcode.com/day/7)   | Uncompleted                 |
