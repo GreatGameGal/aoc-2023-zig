@@ -12,16 +12,16 @@ fn getLines(allocator: std.mem.Allocator, file: std.fs.File) ![][]u8 {
 }
 
 fn parseNumbers(allocator: std.mem.Allocator, list: []const u8) ![][]const u8 {
-    var list_trimmed = std.mem.trim(u8, list, " ");
-    var numbers = try std.ArrayList([]const u8).initCapacity(allocator, std.mem.count(u8, list_trimmed, " ") + 1);
-    var number_iterator = std.mem.splitSequence(u8, list_trimmed, " ");
+    var list_cleaned = try std.mem.replaceOwned(u8, allocator, std.mem.trim(u8, list, " "), "  ", " ");
+    var numbers = try allocator.alloc([]const u8, std.mem.count(u8, list_cleaned, " ") + 1);
+    var number_iterator = std.mem.splitSequence(u8, list_cleaned, " ");
 
-    while (number_iterator.next()) |number| {
-        if (number.len == 0) continue;
-        try numbers.append(number);
+    var i: usize = 0;
+    while (number_iterator.next()) |number| : (i += 1) {
+        numbers[i] = number;
     }
 
-    return numbers.toOwnedSlice();
+    return numbers;
 }
 
 pub fn main() !void {
@@ -43,6 +43,8 @@ pub fn main() !void {
         var lists_iterator = std.mem.splitSequence(u8, line[lists_start..], "|");
         var winning_nums = try parseNumbers(allocator, lists_iterator.first());
         var card = try parseNumbers(allocator, lists_iterator.next().?);
+        defer allocator.free(winning_nums);
+        defer allocator.free(card);
 
         var win_count: u8 = 0;
         for (card) |card_num| {

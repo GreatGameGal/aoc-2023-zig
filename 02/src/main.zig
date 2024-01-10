@@ -24,29 +24,31 @@ const ColorType = enum {
 
 fn getRounds(allocator: std.mem.Allocator, line: []u8) ![][]const u8 {
     const game_start = (std.mem.indexOf(u8, line, ":") orelse 0) + 1;
-    var rounds = try std.ArrayList([]const u8).initCapacity(allocator, std.mem.count(u8, line, ";") + 1);
+    var rounds = try allocator.alloc([]const u8, std.mem.count(u8, line, ";") + 1);
     var round_iterator = std.mem.splitSequence(u8, line[game_start..], ";");
 
-    while (round_iterator.next()) |round| {
-        try rounds.append(std.mem.trim(u8, round, " "));
+    var i: usize = 0;
+    while (round_iterator.next()) |round| : (i += 1) {
+        rounds[i] = std.mem.trim(u8, round, " ");
     }
 
-    return rounds.toOwnedSlice();
+    return rounds;
 }
 
 const Color = struct { color: ColorType, count: u32 };
 
 fn getColors(allocator: std.mem.Allocator, round: []const u8) ![]Color {
-    var colors = try std.ArrayList(Color).initCapacity(allocator, std.mem.count(u8, round, ",") + 1);
+    var colors = try allocator.alloc(Color, std.mem.count(u8, round, ",") + 1);
     var color_iterator = std.mem.splitSequence(u8, round, ",");
 
-    while (color_iterator.next()) |text| {
+    var i: usize = 0;
+    while (color_iterator.next()) |text| : (i += 1) {
         var color_text = std.mem.trim(u8, text, " ");
         var color_split = std.mem.splitSequence(u8, color_text, " ");
         var number_slice = color_split.first();
         var color_slice: []const u8 = color_split.next() orelse &[_]u8{0};
         var number: u32 = try std.fmt.parseUnsigned(u32, number_slice, 10);
-        try colors.append(.{
+        colors[i] = .{
             .color = switch (color_slice[0]) {
                 'r' => ColorType.Red,
                 'b' => ColorType.Blue,
@@ -54,10 +56,10 @@ fn getColors(allocator: std.mem.Allocator, round: []const u8) ![]Color {
                 else => ColorType.Unknown,
             },
             .count = number,
-        });
+        };
     }
 
-    return try colors.toOwnedSlice();
+    return colors;
 }
 
 pub fn main() !void {
@@ -82,6 +84,7 @@ pub fn main() !void {
         var highest_blue: u32 = 0;
 
         const rounds = try getRounds(allocator, line);
+        defer allocator.free(rounds);
         var is_valid_game = true;
         for (rounds) |round| {
             var red: u32 = 0;
@@ -89,6 +92,7 @@ pub fn main() !void {
             var blue: u32 = 0;
 
             var colors = try getColors(allocator, round);
+            defer allocator.free(colors);
             for (colors) |color| {
                 switch (color.color) {
                     ColorType.Red => red += color.count,
