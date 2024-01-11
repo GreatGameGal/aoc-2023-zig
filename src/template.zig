@@ -14,11 +14,11 @@ fn getLines(allocator: std.mem.Allocator, file: std.fs.File) ![][]u8 {
 pub fn main() !void {
     var arena_allocator = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena_allocator.deinit(); // Might never *really* run?
-    var allocator = arena_allocator.allocator();
+    const allocator = arena_allocator.allocator();
     const args = try std.process.argsAlloc(allocator);
 
     const input_path = try std.fs.realpathAlloc(allocator, args[1]);
     const file = try std.fs.openFileAbsolute(input_path, .{});
     const lines = try getLines(allocator, file);
-
+    _ = lines;
 }

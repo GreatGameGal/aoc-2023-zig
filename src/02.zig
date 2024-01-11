@@ -43,11 +43,11 @@ fn getColors(allocator: std.mem.Allocator, round: []const u8) ![]Color {
 
     var i: usize = 0;
     while (color_iterator.next()) |text| : (i += 1) {
-        var color_text = std.mem.trim(u8, text, " ");
+        const color_text = std.mem.trim(u8, text, " ");
         var color_split = std.mem.splitSequence(u8, color_text, " ");
-        var number_slice = color_split.first();
-        var color_slice: []const u8 = color_split.next() orelse &[_]u8{0};
-        var number: u32 = try std.fmt.parseUnsigned(u32, number_slice, 10);
+        const number_slice = color_split.first();
+        const color_slice: []const u8 = color_split.next() orelse &[_]u8{0};
+        const number: u32 = try std.fmt.parseUnsigned(u32, number_slice, 10);
         colors[i] = .{
             .color = switch (color_slice[0]) {
                 'r' => ColorType.Red,
@@ -91,7 +91,7 @@ pub fn main() !void {
             var green: u32 = 0;
             var blue: u32 = 0;
 
-            var colors = try getColors(allocator, round);
+            const colors = try getColors(allocator, round);
             defer allocator.free(colors);
             for (colors) |color| {
                 switch (color.color) {
@@ -104,7 +104,7 @@ pub fn main() !void {
             highest_red = @max(highest_red, red);
             highest_green = @max(highest_green, green);
             highest_blue = @max(highest_blue, blue);
-            var is_not_valid = red > red_cubes or green > green_cubes or blue > blue_cubes;
+            const is_not_valid = red > red_cubes or green > green_cubes or blue > blue_cubes;
             //std.debug.print("{s} (r: {d}, g: {d}, b: {d}) (Possible: {?})\n", .{ round, red, green, blue, !is_not_valid });
             if (is_not_valid) is_valid_game = false;
         }

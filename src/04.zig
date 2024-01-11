@@ -12,7 +12,7 @@ fn getLines(allocator: std.mem.Allocator, file: std.fs.File) ![][]u8 {
 }
 
 fn parseNumbers(allocator: std.mem.Allocator, list: []const u8) ![][]const u8 {
-    var list_cleaned = try std.mem.replaceOwned(u8, allocator, std.mem.trim(u8, list, " "), "  ", " ");
+    const list_cleaned = try std.mem.replaceOwned(u8, allocator, std.mem.trim(u8, list, " "), "  ", " ");
     var numbers = try allocator.alloc([]const u8, std.mem.count(u8, list_cleaned, " ") + 1);
     var number_iterator = std.mem.splitSequence(u8, list_cleaned, " ");
 
@@ -39,10 +39,10 @@ pub fn main() !void {
     var card_counts = try allocator.alloc(u32, lines.len);
     for (card_counts, 0..) |_, i| card_counts[i] = 1;
     for (lines, 0..) |line, i| {
-        var lists_start = std.mem.indexOfPos(u8, line, 0, ":").? + 1;
+        const lists_start = std.mem.indexOfPos(u8, line, 0, ":").? + 1;
         var lists_iterator = std.mem.splitSequence(u8, line[lists_start..], "|");
-        var winning_nums = try parseNumbers(allocator, lists_iterator.first());
-        var card = try parseNumbers(allocator, lists_iterator.next().?);
+        const winning_nums = try parseNumbers(allocator, lists_iterator.first());
+        const card = try parseNumbers(allocator, lists_iterator.next().?);
         defer allocator.free(winning_nums);
         defer allocator.free(card);
 

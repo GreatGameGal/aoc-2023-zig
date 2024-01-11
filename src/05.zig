@@ -27,14 +27,14 @@ const Range = struct {
 
     fn mapTo(self: *const Self, new_range: *const Self, num: usize) RangeError!usize {
         if (!self.contains(num)) return RangeError.OutOfRange;
-        var result = num - self.start + new_range.start;
+        const result = num - self.start + new_range.start;
         if (!new_range.contains(result)) return RangeError.OutOfRange;
         return result;
     }
 };
 
 fn parseNumbers(allocator: std.mem.Allocator, list: []const u8) ![]usize {
-    var list_cleaned = try std.mem.replaceOwned(u8, allocator, std.mem.trim(u8, list, " "), "  ", " ");
+    const list_cleaned = try std.mem.replaceOwned(u8, allocator, std.mem.trim(u8, list, " "), "  ", " ");
     var numbers = try allocator.alloc(usize, std.mem.count(u8, list_cleaned, " ") + 1);
     var number_iterator = std.mem.splitSequence(u8, list_cleaned, " ");
 
@@ -47,7 +47,7 @@ fn parseNumbers(allocator: std.mem.Allocator, list: []const u8) ![]usize {
 }
 
 fn splitLines(allocator: std.mem.Allocator, text: []const u8) ![][]const u8 {
-    var text_trimmed = std.mem.trim(u8, text, "\n");
+    const text_trimmed = std.mem.trim(u8, text, "\n");
     var lines = try allocator.alloc([]const u8, std.mem.count(u8, text_trimmed, "\n") + 1);
     var lines_iterator = std.mem.splitSequence(u8, text_trimmed, "\n");
 
@@ -80,7 +80,7 @@ fn parseMaps(allocator: std.mem.Allocator, sections: [][][]const u8) ![][][]Rang
             maps[i][j] = try allocator.alloc(Range, 2);
             var range_from = &maps[i][j][0];
             var range_to = &maps[i][j][1];
-            var numbers = try parseNumbers(allocator, line);
+            const numbers = try parseNumbers(allocator, line);
             defer allocator.free(numbers);
 
             range_from.start = numbers[1];
@@ -96,7 +96,7 @@ fn parseMaps(allocator: std.mem.Allocator, sections: [][][]const u8) ![][][]Rang
 pub fn main() !void {
     var arena_allocator = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena_allocator.deinit(); // Might never *really* run?
-    var allocator = arena_allocator.allocator();
+    const allocator = arena_allocator.allocator();
     const args = try std.process.argsAlloc(allocator);
 
     const input_path = try std.fs.realpathAlloc(allocator, args[1]);
@@ -107,8 +107,8 @@ pub fn main() !void {
 
     var sections = try splitSections(allocator, file_text);
 
-    var seeds = try parseNumbers(allocator, sections[0][0][std.mem.indexOf(u8, sections[0][0], ":").? + 1 ..]);
-    var maps = try parseMaps(allocator, sections[1..]);
+    const seeds = try parseNumbers(allocator, sections[0][0][std.mem.indexOf(u8, sections[0][0], ":").? + 1 ..]);
+    const maps = try parseMaps(allocator, sections[1..]);
 
     // -- START PART 1 --
 
@@ -119,10 +119,10 @@ pub fn main() !void {
 
         for (maps) |map| {
             current_mapping = for (map) |ranges| {
-                var range_from = &ranges[0];
-                var range_to = &ranges[1];
+                const range_from = &ranges[0];
+                const range_to = &ranges[1];
                 // mapTo returns an error if the value is out of range.
-                var mapped = range_from.mapTo(range_to, current_mapping) catch continue;
+                const mapped = range_from.mapTo(range_to, current_mapping) catch continue;
                 break mapped;
             } else current_mapping;
         }
@@ -138,7 +138,7 @@ pub fn main() !void {
     var i: usize = 0;
     var current_mappings = try std.ArrayList(Range).initCapacity(allocator, seeds.len / 2);
     while (i < seeds.len) : (i += 2) {
-        var seed_range = Range{
+        const seed_range = Range{
             .start = seeds[i],
             .end = seeds[i] + seeds[i + 1],
         };
@@ -154,7 +154,7 @@ pub fn main() !void {
                 const range_from = &ranges[0];
                 const range_to = &ranges[1];
                 if (range_from.overlap(&old_range)) |overlap| {
-                    var new_range = Range{
+                    const new_range = Range{
                         .start = range_from.mapToUnsafe(range_to, overlap.start),
                         .end = range_from.mapToUnsafe(range_to, overlap.end),
                     };
@@ -185,7 +185,7 @@ pub fn main() !void {
 
     // -- START PART 2 Brute Force --
 
-    var start = std.time.nanoTimestamp();
+    const start = std.time.nanoTimestamp();
 
     // This is initalized as a max bceause it is intended to be the lowest found of a list of values.
     lowest_result = std.math.maxInt(usize);
@@ -196,10 +196,10 @@ pub fn main() !void {
 
             for (maps) |map| {
                 current_mapping = for (map) |ranges| {
-                    var range_from = &ranges[0];
-                    var range_to = &ranges[1];
+                    const range_from = &ranges[0];
+                    const range_to = &ranges[1];
                     // mapTo returns an error if the value is out of range.
-                    var mapped = range_from.mapTo(range_to, current_mapping) catch continue;
+                    const mapped = range_from.mapTo(range_to, current_mapping) catch continue;
                     break mapped;
                 } else current_mapping;
             }

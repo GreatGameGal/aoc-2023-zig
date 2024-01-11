@@ -33,7 +33,7 @@ fn getFullNumber(line: []u8, x: usize) u32 {
 pub fn main() !void {
     var arena_allocator = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena_allocator.deinit(); // Might never *really* run?
-    var allocator = arena_allocator.allocator();
+    const allocator = arena_allocator.allocator();
     const args = try std.process.argsAlloc(allocator);
 
     const input_path = try std.fs.realpathAlloc(allocator, args[1]);
@@ -62,7 +62,7 @@ pub fn main() !void {
                             switch (lines[other_y][other_x]) {
                                 '0'...'9' => {
                                     found_numbers += 1;
-                                    var num = getFullNumber(lines[other_y], other_x);
+                                    const num = getFullNumber(lines[other_y], other_x);
                                     pt1_sum += num;
                                     found_numbers_mult *= num;
                                     while (other_x < x + 2 and std.ascii.isDigit(lines[other_y][other_x])) other_x += 1;

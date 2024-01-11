@@ -39,7 +39,7 @@ pub fn build(b: *std.Build) !void {
 
     var arena_allocator = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena_allocator.deinit();
-    var allocator = arena_allocator.allocator();
+    const allocator = arena_allocator.allocator();
 
     const dayno: ?usize = b.option(usize, "n", "Select day.");
 
@@ -49,7 +49,7 @@ pub fn build(b: *std.Build) !void {
             std.os.exit(2);
         }
 
-        var day = days[dayn - 1];
+        const day = days[dayn - 1];
 
         const exe = b.addExecutable(.{
             .name = day.name,
