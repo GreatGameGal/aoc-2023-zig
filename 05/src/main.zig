@@ -182,4 +182,32 @@ pub fn main() !void {
     std.debug.print("Pt2: {d}\n", .{lowest_of_map});
 
     // -- END PART 2 --
+
+    // -- START PART 2 Brute Force --
+
+    var start = std.time.nanoTimestamp();
+
+    // This is initalized as a max bceause it is intended to be the lowest found of a list of values.
+    lowest_result = std.math.maxInt(usize);
+    i = 0;
+    while (i < seeds.len) : (i += 2) {
+        for (seeds[i]..seeds[i] + seeds[i + 1]) |seed| {
+            var current_mapping: usize = seed;
+
+            for (maps) |map| {
+                current_mapping = for (map) |ranges| {
+                    var range_from = &ranges[0];
+                    var range_to = &ranges[1];
+                    // mapTo returns an error if the value is out of range.
+                    var mapped = range_from.mapTo(range_to, current_mapping) catch continue;
+                    break mapped;
+                } else current_mapping;
+            }
+            lowest_result = @min(current_mapping, lowest_result);
+        }
+    }
+
+    std.debug.print("Pt2 Brute Force: {d} ({d}ms)\n", .{ lowest_result, @as(f64, @floatFromInt(std.time.nanoTimestamp() - start)) / 1e6 });
+
+    // -- END PART 2 Brute Force --
 }
